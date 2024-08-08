@@ -1,9 +1,8 @@
 ﻿#include <windows.h>
 #include <tlhelp32.h>
 #include <iostream>
-#include <locale>  // Для установки локали
+#include <locale> 
 
-// Функция для поиска PID процесса по его имени
 DWORD FindProcessId(const std::wstring& processName) {
     PROCESSENTRY32 processEntry;
     processEntry.dwSize = sizeof(PROCESSENTRY32);
@@ -28,7 +27,6 @@ DWORD FindProcessId(const std::wstring& processName) {
     return 0;
 }
 
-// Функция для приостановки процесса по его PID
 void SuspendProcess(DWORD processId) {
     HANDLE process = OpenProcess(PROCESS_SUSPEND_RESUME, FALSE, processId);
     if (process == NULL) {
@@ -36,7 +34,6 @@ void SuspendProcess(DWORD processId) {
         return;
     }
 
-    // Получение списка потоков процесса
     HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD, 0);
     if (snapshot == INVALID_HANDLE_VALUE) {
         std::wcerr << L"Ошибка при создании снимка потоков." << std::endl;
@@ -64,7 +61,6 @@ void SuspendProcess(DWORD processId) {
     std::wcout << L"Процесс приостановлен." << std::endl;
 }
 
-// Функция для возобновления процесса по его PID
 void ResumeProcess(DWORD processId) {
     HANDLE process = OpenProcess(PROCESS_SUSPEND_RESUME, FALSE, processId);
     if (process == NULL) {
@@ -72,7 +68,6 @@ void ResumeProcess(DWORD processId) {
         return;
     }
 
-    // Получение списка потоков процесса
     HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD, 0);
     if (snapshot == INVALID_HANDLE_VALUE) {
         std::wcerr << L"Ошибка при создании снимка потоков." << std::endl;
@@ -101,7 +96,6 @@ void ResumeProcess(DWORD processId) {
 }
 
 int main() {
-    // Установка локали для корректного отображения символов Unicode в консоли
     std::locale::global(std::locale(""));
 
     std::wstring processName = L"GTA5.exe";
